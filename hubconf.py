@@ -18,7 +18,8 @@ from sklearn.metrics.cluster import homogeneity_score, completeness_score, v_mea
 
 
 
-###### PART 1 ######
+
+######################## PART 1 ###################
 
 def get_data_blobs(n_points=100):
   # write your code here
@@ -61,6 +62,8 @@ def compare_clusterings(ypred_1=None,ypred_2=None):
   c = "%.6f" % completeness_score(ypred_1, ypred_2)
   v = "%.6f" % v_measure_score(ypred_1, ypred_2)
   return h,c,v
+
+
 # Testing the above functions
 
 X_b , y_b = get_data_blobs()
@@ -77,12 +80,16 @@ print(compare_clusterings(y_b_pred, y_c_pred))
 
 
 
-###### PART 2 ######
+
+
+
+########################## PART-2A ##########################
 
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, roc_auc_score
 
+# Logistic Regression
 def build_lr_model(X=None, y=None):
   # write your code...
   # Build logistic regression, refer to sklearn
@@ -90,6 +97,7 @@ def build_lr_model(X=None, y=None):
   lr_model.fit(X,y)
   return lr_model
 
+# Random Forest
 def build_rf_model(X=None, y=None):
   # write your code...
   # Build Random Forest classifier, refer to sklearn
@@ -98,7 +106,6 @@ def build_rf_model(X=None, y=None):
   return rf_model
 
 def get_metrics(model=None,X=None,y=None):
-  pass
   # Obtain accuracy, precision, recall, f1score, auc score - refer to sklearn metrics
   acc, prec, rec, f1, auc = 0,0,0,0,0
   # write your code here...
@@ -113,6 +120,7 @@ def get_metrics(model=None,X=None,y=None):
 
 
 # Checking the above functions
+
 from sklearn.model_selection import train_test_split
 X, y = get_data_mnist()
 Xtrain,Xtest,ytrain,ytest = train_test_split(X,y,test_size=0.3)
@@ -123,6 +131,11 @@ rf_model = build_rf_model(Xtrain, ytrain)
 print(get_metrics(lr_model, Xtest, ytest))
 print(get_metrics(rf_model, Xtest, ytest))
 
+
+
+
+
+########################## PART-2B ########################## 
 
 def get_paramgrid_lr():
   # you need to return parameter grid dictionary for use in grid search cv
@@ -167,7 +180,7 @@ def perform_gridsearch_cv_multimetric(model=None, param_grid=None, cv=5, X=None,
 
 
 
-###### PART 3 ######
+############### PART 3 ################
 
 class MyNN(nn.Module):
   def __init__(self,inp_dim=64,hid_dim=13,num_classes=10):
