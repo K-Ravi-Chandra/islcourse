@@ -143,6 +143,11 @@ def get_paramgrid_lr():
   lr_param_grid = None
   # refer to sklearn documentation on grid search and logistic regression
   # write your code here...
+  lr_param_grid = {
+      "max_iter": [100, 200, 500],
+      "penalty": ["l1","l2"],
+      "solver" : ["liblinear"]
+  }
   return lr_param_grid
 
 def get_paramgrid_rf():
@@ -150,9 +155,13 @@ def get_paramgrid_rf():
   # n_estimators: 1, 10, 100
   # criterion: gini, entropy
   # maximum depth: 1, 10, None  
-  rf_param_grid = None
   # refer to sklearn documentation on grid search and random forest classifier
   # write your code here...
+  rf_param_grid = { 
+    'n_estimators' : [1, 10, 100],
+    'max_depth' : [1,10,None],
+    'criterion' :['gini', 'entropy'],
+  }
   return rf_param_grid
 
 def perform_gridsearch_cv_multimetric(model=None, param_grid=None, cv=5, X=None, y=None, metrics=['accuracy','roc_auc']):
@@ -163,7 +172,7 @@ def perform_gridsearch_cv_multimetric(model=None, param_grid=None, cv=5, X=None,
   
   # metrics = [] the evaluation program can change what metrics to choose
   
-  grid_search_cv = None
+  # grid_search_cv = None
   # create a grid search cv object
   # fit the object on X and y input above
   # write your code here...
@@ -173,7 +182,13 @@ def perform_gridsearch_cv_multimetric(model=None, param_grid=None, cv=5, X=None,
   # refer to cv_results_ dictonary
   # return top 1 score for each of the metrics given, in the order given in metrics=... list
   
+  print(model.get_params().keys())
   top1_scores = []
+
+  for scoring in metrics:
+    grid_search_cv = GridSearchCV(model,param_grid, cv=cv, scoring=scoring)
+    grid_search_cv.fit(X,y)
+    top1_scores.append(grid_search_cv.best_score_)
   
   return top1_scores
 
