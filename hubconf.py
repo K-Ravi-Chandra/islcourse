@@ -74,7 +74,6 @@ print(y_c_pred)
 print(compare_clusterings(y_b_pred, y_c_pred))
 
 
-
 ###### PART 2 ######
 
 from sklearn.linear_model import LogisticRegression
@@ -108,6 +107,18 @@ def get_metrics(model=None,X=None,y=None):
   auc = roc_auc_score(y, model.predict_proba(X), multi_class='ovr' )
   # Now return the calculated values
   return acc, prec, rec, f1, auc
+
+
+# Checking the above functions
+from sklearn.model_selection import train_test_split
+X, y = get_data_mnist()
+Xtrain,Xtest,ytrain,ytest = train_test_split(X,y,test_size=0.3)
+
+lr_model = build_lr_model(Xtrain, ytrain)
+rf_model = build_rf_model(Xtrain, ytrain)
+
+print(get_metrics(lr_model, Xtest, ytest))
+print(get_metrics(rf_model, Xtest, ytest))
 
 
 def get_paramgrid_lr():
