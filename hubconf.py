@@ -2,6 +2,11 @@
 import torch
 from torch import nn
 import torch.optim as optim
+from sklearn.datasets import make_blobs, make_circles, load_digits
+import matplotlib.pyplot as plt
+from matplotlib.colors import ListedColormap
+from sklearn.linear_model import LogisticRegression
+import numpy as np
 
 # You can import whatever standard packages are required
 
@@ -10,13 +15,13 @@ import torch.optim as optim
 # Avoid pip install requirement on the evaluation program side, if you use above packages and sub-packages of them, then that is fine!
 
 ###### PART 1 ######
-
 def get_data_blobs(n_points=100):
   pass
   # write your code here
   # Refer to sklearn data sets
   X, y = None
   # write your code ...
+  X, y = make_blobs(n_samples=n_points, centers=3, n_features=2,random_state=0)
   return X,y
 
 def get_data_circles(n_points=100):
@@ -25,14 +30,16 @@ def get_data_circles(n_points=100):
   # Refer to sklearn data sets
   X, y = None
   # write your code ...
+  X, y = make_circles(n_samples=n_points, shuffle=True,  factor=0.3, noise=0.05, random_state=0)
   return X,y
 
 def get_data_mnist():
   pass
   # write your code here
   # Refer to sklearn data sets
-  X,y = None
-  # write your code ...
+  digits = load_digits()
+  X=digits.data
+  y=digits.target
   return X,y
 
 def build_kmeans(X=None,k=10):
