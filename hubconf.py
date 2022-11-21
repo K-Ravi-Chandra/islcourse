@@ -66,17 +66,17 @@ def compare_clusterings(ypred_1=None,ypred_2=None):
 
 # Testing the above functions
 
-X_b , y_b = get_data_blobs()
-X_c, y_c = get_data_circles()
-km = build_kmeans(X = X_b, k = 10)
-y_b_pred = assign_kmeans(km, X_b)
-print(y_b_pred)
+# X_b , y_b = get_data_blobs()
+# X_c, y_c = get_data_circles()
+# km = build_kmeans(X = X_b, k = 10)
+# y_b_pred = assign_kmeans(km, X_b)
+# print(y_b_pred)
 
-km = build_kmeans(X = X_c, k = 10)
-y_c_pred = assign_kmeans(km, X_c)
-print(y_c_pred)
+# km = build_kmeans(X = X_c, k = 10)
+# y_c_pred = assign_kmeans(km, X_c)
+# print(y_c_pred)
 
-print(compare_clusterings(y_b_pred, y_c_pred))
+# print(compare_clusterings(y_b_pred, y_c_pred))
 
 
 
@@ -121,15 +121,15 @@ def get_metrics(model=None,X=None,y=None):
 
 # Checking the above functions
 
-from sklearn.model_selection import train_test_split
-X, y = get_data_mnist()
-Xtrain,Xtest,ytrain,ytest = train_test_split(X,y,test_size=0.3)
+# from sklearn.model_selection import train_test_split
+# X, y = get_data_mnist()
+# Xtrain,Xtest,ytrain,ytest = train_test_split(X,y,test_size=0.3)
 
-lr_model = build_lr_model(Xtrain, ytrain)
-rf_model = build_rf_model(Xtrain, ytrain)
+# lr_model = build_lr_model(Xtrain, ytrain)
+# rf_model = build_rf_model(Xtrain, ytrain)
 
-print(get_metrics(lr_model, Xtest, ytest))
-print(get_metrics(rf_model, Xtest, ytest))
+# print(get_metrics(lr_model, Xtest, ytest))
+# print(get_metrics(rf_model, Xtest, ytest))
 
 
 
@@ -195,14 +195,14 @@ def perform_gridsearch_cv_multimetric(model=None, param_grid=None, cv=5, X=None,
   return top1_scores
 
 
-# Checking the above functions
-param_grid = get_paramgrid_lr()
-print("------------")
-print(perform_gridsearch_cv_multimetric(model=LogisticRegression(), param_grid=param_grid, cv=5, X=X, y=y, metrics=['accuracy']))
+# # Checking the above functions
+# param_grid = get_paramgrid_lr()
+# print("------------")
+# print(perform_gridsearch_cv_multimetric(model=LogisticRegression(), param_grid=param_grid, cv=5, X=X, y=y, metrics=['accuracy']))
 
-param_grid = get_paramgrid_rf()
-print("------------")
-print(perform_gridsearch_cv_multimetric(model=RandomForestClassifier(), param_grid=param_grid, cv=5, X=X, y=y, metrics=['accuracy']))
+# param_grid = get_paramgrid_rf()
+# print("------------")
+# print(perform_gridsearch_cv_multimetric(model=RandomForestClassifier(), param_grid=param_grid, cv=5, X=X, y=y, metrics=['accuracy']))
 
 
 
