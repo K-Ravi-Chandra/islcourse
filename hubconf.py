@@ -136,11 +136,12 @@ print(get_metrics(rf_model, Xtest, ytest))
 
 
 ########################## PART-2B ########################## 
+from sklearn.model_selection import GridSearchCV
 
 def get_paramgrid_lr():
   # you need to return parameter grid dictionary for use in grid search cv
   # penalty: l1 or l2
-  lr_param_grid = None
+  # lr_param_grid = None
   # refer to sklearn documentation on grid search and logistic regression
   # write your code here...
   lr_param_grid = {
@@ -161,6 +162,7 @@ def get_paramgrid_rf():
     'n_estimators' : [1, 10, 100],
     'max_depth' : [1,10,None],
     'criterion' :['gini', 'entropy'],
+
   }
   return rf_param_grid
 
@@ -189,9 +191,18 @@ def perform_gridsearch_cv_multimetric(model=None, param_grid=None, cv=5, X=None,
     grid_search_cv = GridSearchCV(model,param_grid, cv=cv, scoring=scoring)
     grid_search_cv.fit(X,y)
     top1_scores.append(grid_search_cv.best_score_)
-  
+
   return top1_scores
 
+
+# Checking the above functions
+param_grid = get_paramgrid_lr()
+print("------------")
+print(perform_gridsearch_cv_multimetric(model=LogisticRegression(), param_grid=param_grid, cv=5, X=X, y=y, metrics=['accuracy']))
+
+param_grid = get_paramgrid_rf()
+print("------------")
+print(perform_gridsearch_cv_multimetric(model=RandomForestClassifier(), param_grid=param_grid, cv=5, X=X, y=y, metrics=['accuracy']))
 
 
 
