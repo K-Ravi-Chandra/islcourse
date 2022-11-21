@@ -73,13 +73,17 @@ print(y_c_pred)
 
 print(compare_clusterings(y_b_pred, y_c_pred))
 
+
 ###### PART 2 ######
+from sklearn.linear_model import LogisticRegression
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, roc_auc_score
 
 def build_lr_model(X=None, y=None):
-  pass
-  lr_model = None
   # write your code...
   # Build logistic regression, refer to sklearn
+  lr_model = LogisticRegression(solver="liblinear",fit_intercept=False)
+  lr_model.fit(X,y)
   return lr_model
 
 def build_rf_model(X=None, y=None):
