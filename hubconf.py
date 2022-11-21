@@ -105,16 +105,16 @@ def build_rf_model(X=None, y=None):
   rf_model.fit(X,y)
   return rf_model
 
-def get_metrics(model=None,X=None,y=None):
+def get_metrics(model1=None,X=None,y=None):
   # Obtain accuracy, precision, recall, f1score, auc score - refer to sklearn metrics
   acc, prec, rec, f1, auc = 0,0,0,0,0
   # write your code here...
-  y_pred = model.predict(X)
+  y_pred = model1.predict(X)
   acc = accuracy_score(y, y_pred)
   prec = precision_score(y, y_pred, average='micro')
   rec =  recall_score(y, y_pred , average='micro')
   f1 =  f1_score(y, y_pred, average='micro' )
-  auc = roc_auc_score(y, model.predict_proba(X), multi_class='ovr' )
+  auc = roc_auc_score(y, model1.predict_proba(X), multi_class='ovr' )
   # Now return the calculated values
   return acc, prec, rec, f1, auc
 
@@ -166,7 +166,7 @@ def get_paramgrid_rf():
   }
   return rf_param_grid
 
-def perform_gridsearch_cv_multimetric(model=None, param_grid=None, cv=5, X=None, y=None, metrics=['accuracy','roc_auc']):
+def perform_gridsearch_cv_multimetric(model1=None, param_grid=None, cv=5, X=None, y=None, metrics=['accuracy','roc_auc']):
   
   # you need to invoke sklearn grid search cv function
   # refer to sklearn documentation
@@ -184,11 +184,11 @@ def perform_gridsearch_cv_multimetric(model=None, param_grid=None, cv=5, X=None,
   # refer to cv_results_ dictonary
   # return top 1 score for each of the metrics given, in the order given in metrics=... list
   
-  print(model.get_params().keys())
+  print(model1.get_params().keys())
   top1_scores = []
 
   for scoring in metrics:
-    grid_search_cv = GridSearchCV(model,param_grid, cv=cv, scoring=scoring)
+    grid_search_cv = GridSearchCV(model1,param_grid, cv=cv, scoring=scoring)
     grid_search_cv.fit(X,y)
     top1_scores.append(grid_search_cv.best_score_)
 
