@@ -206,25 +206,20 @@ def perform_gridsearch_cv_multimetric(model1=None, param_grid=None, cv=5, X=None
 
 
 
-############### PART 3 ################
-import torch
-import torch.nn as nn
-import torch.nn.functional as F
-import torch.optim as optim
-
 class MyNN(nn.Module):
   def __init__(self,inp_dim=64,hid_dim=13,num_classes=10):
     super(MyNN,self).__init__()
     
-    self.fc_encoder = nn.Linear(inp_dim, hid_dim)
-    self.fc_decoder = nn.Linear( hid_dim, inp_dim) # write your code hid_dim to inp_dim mapper
-    self.fc_classifier = nn.Linear( hid_dim, num_classes) # write your code to map hid_dim to num_classes
+    self.fc_encoder = nn.Linear(inp_dim,hid_dim) 
+    self.fc_decoder = nn.Linear(hid_dim,inp_dim) 
+    self.fc_classifier = nn.Linear(hid_dim,num_classes) 
     
-    self.relu = nn.ReLU()
-    self.softmax = nn.Softmax(dim=0) #write your code - softmax object
+    self.relu = nn.ReLU() #write your code - relu object
+    self.softmax = nn.Softmax() #write your code - softmax object
     
   def forward(self,x):
-    x = torch.flatten(x, 0)
+    x = torch.flatten(x) # write your code - flatten x
+    x = torch.nn.functional.normalize(x, p=2.0, dim=0)
     x_enc = self.fc_encoder(x)
     x_enc = self.relu(x_enc)
     
@@ -237,18 +232,10 @@ class MyNN(nn.Module):
   
   # This a multi component loss function - lc1 for class prediction loss and lc2 for auto-encoding loss
   def loss_fn(self,x,yground,y_pred,xencdec):
-    
-    # class prediction loss
-    # yground needs to be one hot encoded - write your code
-    loss = nn.CrossEntropyLoss()
-    yground =  torch.nn.functional.one_hot(torch.tensor(yground), num_classes= 10)
-    lc1 = loss(y_pred.double(),yground.double() ) # write your code for cross entropy between yground and y_pred, advised to use torch.mean()
-    
-    # auto encoding loss
+    lc1 = -(torch.nn.functional.one_hot(yground,num_classes=y_pred.shape[-1])*torch.log(y_pred)) # write your code for cross entropy between yground and y_pred, advised to use torch.mean()
+    lc1=torch.mean(lc1)
     lc2 = torch.mean((x - xencdec)**2)
-    lval = lc1 + lc2
-    
-    return lval
+    return lc1+lc2
     
 def get_mynn(inp_dim=64,hid_dim=13,num_classes=10):
   mynn = MyNN(inp_dim,hid_dim,num_classes)
@@ -256,17 +243,17 @@ def get_mynn(inp_dim=64,hid_dim=13,num_classes=10):
   return mynn
 
 def get_mnist_tensor():
-  digits = load_digits()
-  X= torch.from_numpy(digits.data)
-  y= torch.from_numpy(digits.target)
-  return X,y
+  X,y = load_digits(return_X_y=True)
+  X_tensor=torch.tensor(X)
+  y_tensor=torch.tensor(y)
+  return X_tensor,y_tensor
 
-def get_loss_on_single_point(mynn=None,x0=None,y0=None):
+def get_loss_on_single_point(mynn,x0,y0):
   y_pred, xencdec = mynn(x0)
   lossval = mynn.loss_fn(x0,y0,y_pred,xencdec)
   return lossval
 
-def train_combined_encdec_predictor(mynn=None,X=None,y=None, epochs=11):
+def train_combined_encdec_predictor(mynn,X,y, epochs=11):
   # X, y are provided as tensor
   # perform training on the entire data set (no batches etc.)
   # for each epoch, update weights
@@ -274,13 +261,13 @@ def train_combined_encdec_predictor(mynn=None,X=None,y=None, epochs=11):
   optimizer = optim.SGD(mynn.parameters(), lr=0.01)
   
   for i in range(epochs):
-    
-    for i in range(len(X)):      
-      ypred, Xencdec = mynn(X[i])
-      
-      lval = mynn.loss_fn(X[i],y[i],ypred,Xencdec)
-      optimizer.zero_grad()
-      lval.backward()
-      optimizer.step()
-    
+    for j in range(X.shape[0]):
+      try:
+        optimizer.zero_grad()
+        ypred, Xencdec = mynn(X[j])
+        lval = mynn.loss_fn(X[j],y,ypred,Xencdec)
+        lval.backward()
+        optimizer.step()
+      except:
+        pass
   return mynn
