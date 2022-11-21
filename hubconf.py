@@ -53,10 +53,26 @@ def assign_kmeans(km=None,X=None):
   return ypred
 
 def compare_clusterings(ypred_1=None,ypred_2=None):
-  pass
   # refer to sklearn documentation for homogeneity, completeness and vscore
   h,c,v = 0,0,0 # you need to write your code to find proper values
+  h = "%.6f" % homogeneity_score(ypred_1, ypred_2)
+  c = "%.6f" % completeness_score(ypred_1, ypred_2)
+  v = "%.6f" % v_measure_score(ypred_1, ypred_2)
   return h,c,v
+
+
+X_b , y_b = get_data_blobs()
+X_c, y_c = get_data_circles()
+km = build_kmeans(X = X_b, k = 10)
+y_b_pred = assign_kmeans(km, X_b)
+print(y_b_pred)
+
+km = build_kmeans(X = X_c, k = 10)
+y_c_pred = assign_kmeans(km, X_c)
+print(y_c_pred)
+
+print(compare_clusterings(y_b_pred, y_c_pred))
+
 ###### PART 2 ######
 
 def build_lr_model(X=None, y=None):
